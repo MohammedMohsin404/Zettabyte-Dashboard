@@ -1,26 +1,83 @@
+/* app/globals.css */
+
+/* ✅ Tailwind v4 single import */
 @import "tailwindcss";
 
+/* ---------- Theme tokens (default = dark) ---------- */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #0b0f1a;
+  --panel: #101827;
+  --card: #121a2d;
+  --text: #e6ecff;
+  --muted: #9aa4bf;
+  --border: rgba(255,255,255,.10);
+  --brand: #2a84ff;
+  --header-h: 64px;
+  --radius: 14px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Light theme overrides */
+html[data-theme="light"] {
+  --bg: #f7f8fb;
+  --panel: #ffffff;
+  --card: #ffffff;
+  --text: #0b1020;
+  --muted: #58607a;
+  --border: rgba(15, 23, 42, .10);
+  --brand: #2a84ff;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ---------- Reusable composition classes ---------- */
+.container { @apply mx-auto px-4; }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.18);
+}
+
+.section {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.btn {
+  @apply inline-flex items-center gap-2 px-4 py-2 rounded-xl text-white transition;
+  background: var(--brand);
+}
+.btn:hover { filter: brightness(1.05); }
+.btn:active { filter: brightness(.95); }
+
+.icon-btn {
+  @apply inline-flex items-center justify-center rounded-xl transition;
+  width: 36px; height: 36px;
+  background: rgba(255,255,255,.08);
+  border: 1px solid var(--border);
+}
+html[data-theme="light"] .icon-btn { background: rgba(15, 23, 42, .06); }
+.icon-btn:hover { filter: brightness(1.05); }
+
+.table { @apply w-full border-collapse; }
+.table th, .table td { @apply py-3 px-4 text-left; border-bottom: 1px solid var(--border); }
+
+.skeleton { @apply animate-pulse rounded; background: rgba(255,255,255,.08); }
+html[data-theme="light"] .skeleton { background: rgba(15, 23, 42, .06); }
+
+/* Focus ring */
+:where(a, button, input, [role="button"]) { outline: none; }
+:where(a, button, [role="button"]):focus-visible {
+  box-shadow: 0 0 0 2px var(--brand);
+  border-radius: 12px;
 }
