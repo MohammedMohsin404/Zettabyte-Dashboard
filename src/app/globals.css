@@ -16,6 +16,14 @@
   --radius: 14px;
 }
 
+:root {
+  --brand: #2563eb; /* blue-600 */
+  --border: rgba(15, 23, 42, 0.08); /* slate-900/8 */
+}
+.dark {
+  --border: rgba(255, 255, 255, 0.12);
+}
+
 /* Light theme overrides */
 html[data-theme="light"] {
   --bg: #f7f8fb;

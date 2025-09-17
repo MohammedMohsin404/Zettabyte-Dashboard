@@ -52,22 +52,53 @@ function ListItem({
   href?: string;
 }) {
   const body = (
-    <div className="flex items-center justify-between gap-3 rounded-xl border border-[var(--border)] bg-[var(--card)] p-3 hover:bg-white/5">
-      <div className="min-w-0">
+    <div
+      className="
+        flex items-center justify-between gap-3
+        rounded-xl border border-[var(--border)] bg-[var(--card)]
+        p-3 hover:bg-white/5
+        overflow-hidden               /* prevent bleed */
+      "
+    >
+      {/* left block */}
+      <div className="min-w-0 flex-1">  {/* flex-1 + min-w-0 enables truncation */}
         <div className="font-medium truncate">{title}</div>
-        {subtitle && <div className="text-xs text-[var(--muted)] truncate">{subtitle}</div>}
+        {subtitle && (
+          <div
+            className="
+              text-xs text-[var(--muted)]
+              break-words                 /* wrap long words/urls */
+              line-clamp-2                /* keep to 2 lines */
+            "
+          >
+            {subtitle}
+          </div>
+        )}
       </div>
-      {meta && <div className="text-[10px] text-[var(--muted)]">{meta}</div>}
+
+      {/* right meta */}
+      {meta && (
+        <div
+          className="
+            shrink-0 text-[10px] text-[var(--muted)]
+            ml-2
+          "
+        >
+          {meta}
+        </div>
+      )}
     </div>
   );
+
   return href ? (
-    <Link href={toRoute(href)} className="block">
+    <Link href={toRoute(href)} className="block focus:outline-none focus:ring-2">
       {body}
     </Link>
   ) : (
     body
   );
 }
+
 
 function Gauge({ percent = 72 }: { percent: number }) {
   // clamp 0..100
@@ -117,7 +148,7 @@ export default function HomePage() {
   const labels = values.map((_, i) => i + 1);
 
   // Featured = first post (stable demo)
-  const featured = posts?.[0];
+  const featured = posts?.[ 0 ];
 
   // Recent posts (5)
   const recent = (posts ?? []).slice(0, 5);
@@ -125,10 +156,10 @@ export default function HomePage() {
   // Top authors: count posts per userId (based on first 100 posts in API)
   const authorCounts = new Map<number, number>();
   (posts ?? []).forEach((p) => authorCounts.set(p.userId, (authorCounts.get(p.userId) ?? 0) + 1));
-  const topAuthors = [...authorCounts.entries()]
-    .sort((a, b) => b[1] - a[1])
+  const topAuthors = [ ...authorCounts.entries() ]
+    .sort((a, b) => b[ 1 ] - a[ 1 ])
     .slice(0, 5)
-    .map(([userId, count]) => ({
+    .map(([ userId, count ]) => ({
       user: users?.find((u) => u.id === userId),
       count,
     }));
@@ -219,9 +250,15 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Recent posts list */}
-        <section className="rounded-2xl border border-[var(--border)] bg-[var(--panel)] p-4">
-          <div className="flex flrx  items-center justify-between mb-3">
+        {/* Recent Posts */}
+        <section
+          className="
+    relative isolate                     /* own stacking context */
+    rounded-2xl border border-[var(--border)] bg-[var(--panel)] p-4
+    overflow-hidden                       /* clip inner shadows/highlights */
+  "
+        >
+          <div className="flex items-center justify-between mb-3">
             <h3 className="font-semibold">Recent Posts</h3>
             <Link href={toRoute("/posts")} className="text-sm text-[var(--muted)] hover:underline">
               View all
@@ -238,7 +275,7 @@ export default function HomePage() {
 
           {!isLoading && (
             <motion.ul
-              className="grid gap-2 "
+              className="grid gap-2 min-w-0"       /* min-w-0 keeps children from overflowing grid cell */
               initial="hidden"
               animate="visible"
               variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.05 } } }}
@@ -247,18 +284,15 @@ export default function HomePage() {
                 <motion.li
                   key={p.id}
                   variants={{ hidden: { y: 8, opacity: 0 }, visible: { y: 0, opacity: 1 } }}
+                  className="min-w-0"              /* extra safety on each row */
                 >
-                  <ListItem
-                    title={p.title}
-                    subtitle={p.body}
-                    meta={`#${p.id}`}
-                    href={`/posts/${p.id}`}
-                  />
+                  <ListItem title={p.title} subtitle={p.body} meta={`#${p.id}`} href={`/posts/${p.id}`} />
                 </motion.li>
               ))}
             </motion.ul>
           )}
         </section>
+
       </div>
 
       {/* ======= RIGHT (1 col): Authors + Activity + Gauge + Actions ======= */}

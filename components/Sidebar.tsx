@@ -128,10 +128,15 @@ export function Sidebar({ open, setOpen }: SidebarProps) {
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className={
-                      "group flex items-center gap-3 px-3 py-2 rounded-xl border border-transparent hover:bg-[rgba(255,255,255,.06)] focus:bg-[rgba(255,255,255,.08)]" +
-                      (active ? " bg-[rgba(255,255,255,.10)] border-[var(--border)]" : "")
-                    }
+                 className={
+  "group flex items-center gap-3 px-3 py-2 rounded-xl border border-transparent " +
+  "text-[var(--text)] hover:bg-[rgba(0,0,0,0.04)] dark:hover:bg-[rgba(255,255,255,0.06)] " +
+  "focus:bg-[rgba(0,0,0,0.06)] dark:focus:bg-[rgba(255,255,255,0.08)]" +
+  (active
+    ? " bg-[rgba(0,0,0,0.08)] dark:bg-[rgba(255,255,255,0.10)] border-[var(--border)]"
+    : "")
+}
+
                     title={!open ? item.label : undefined}
                     aria-current={active ? "page" : undefined}
                   >
